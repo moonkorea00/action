@@ -1,4 +1,4 @@
-name: 'action test'
+name: 'action test for marketplace'
 description: 'lighthouse action'
 inputs:
   # who-to-greet:  
