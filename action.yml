@@ -1,4 +1,4 @@
-name: 'action'
+name: 'action test'
 description: 'lighthouse action'
 inputs:
   # who-to-greet:  
