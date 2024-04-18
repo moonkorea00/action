@@ -8,4 +8,4 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Run Local Action
-        uses: action.yml
+        uses: ./
