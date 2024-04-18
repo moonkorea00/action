@@ -1,11 +1,11 @@
 name: 'action test for marketplace'
 description: 'lighthouse action'
-inputs:
+# inputs:
   # who-to-greet:  
     # description: 'Who to greet'
     # required: true
     # default: 'World'
-outputs:
+# outputs:
   # time:
   #   description: 'The time we greeted you'
 runs:
