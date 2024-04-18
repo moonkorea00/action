@@ -1,0 +1,8 @@
+name: CI
+on: [pull_request]
+
+jobs:
+  - name: Checkout
+    uses: actions/checkout@v2
+  - name: Run Local Action
+    uses: ./action
