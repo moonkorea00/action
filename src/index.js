@@ -9,7 +9,7 @@ const {
 async function main() {
   try {
     const context = github.context;
-    const token = core.getInput('token');
+    const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
 
     if (
