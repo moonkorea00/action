@@ -6,67 +6,46 @@ const {
   createPullRequestComment,
   createReportComparisonTable,
 } = require('./comment');
+const {getLightHouseIssue, mutateLighthouseIssue } = require('./issue');
 
 async function main() {
   try {
-    const context = github.context;
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
     const outputDir = core.getInput('outputDir');
-    const reports = JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`));
+    const reports = fs.readFileSync(`${outputDir}/manifest.json`);
+    const context = github.context;
 
     if (
       context.eventName === 'pull_request' &&
       ['opened', 'reopened', 'synchronize'].includes(context.payload.action)
     ) {
-      core.info('Start running lighthouse report tracker v1.0.0..');
+      core.info('✅ Start running lighthouse report tracker v1.0.0..');
+const issue = await getLightHouseIssue();
+console.log('THIS IS ISSUE : ',issue)
+console.log('THIS IS REPO: ', context.repo);
+  console.log('THIS IS REPO.REPO: ', context.repo.repo);
+      // const commentBody = await createReportComparisonTable({
+      //   context,
+      //   currentReports: JSON.parse(reports),
+      // });
 
-      // const previousReports = issues.find(issue => issue.id === `lighthouse-report-log`) // update using github api
-      const curr = JSON.parse(
-        JSON.stringify([
-          {
-            url: 'http://localhost:3000/',
-            pr: 15,
-            summary: {
-              performance: 0.88,
-              accessibility: 0.74,
-              'best-practices': 0.81,
-              seo: 0.92,
-              pwa: 0.88,
-            },
-          },
-          {
-            url: 'http://localhost:3000/post',
-            pr: 13,
-            summary: {
-              performance: 0.88,
-              accessibility: 0.74,
-              'best-practices': 0.81,
-              seo: 0.92,
-              pwa: 0.88,
-            },
-          },
-        ])
-      );
-
-      const commentBody = createReportComparisonTable(
-        context,
-        reports,
-        (previousReports = [])
-      );
-      await createPullRequestComment(octokit, context, commentBody);
+      // await createPullRequestComment({ octokit, context, body: commentBody });
     } else if (
       context.eventName === 'pull_request_target' &&
       context.payload.pull_request.merged
     ) {
-      // createOrUpdateIssue();
+      mutateLighthouseIssue({
+        octokit,
+        context,
+        body: reports,
+      });
     }
   } catch (err) {
-    core.setFailed(`Failed running action with error : ${err}`);
+    core.setFailed(`❌ Failed running action with error : ${err}`);
   } finally {
-    core.info('End running lighthouse report tracker v1.0.0..');
+    core.info('✅ End running lighthouse report tracker v1.0.0..');
   }
 }
 
 main();
-// main().catch(err => core.setFailed(`Action failed with error ${err}`)).finally;

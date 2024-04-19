@@ -1,4 +1,6 @@
-const createPullRequestComment = async (octokit, context, commentBody) => {
+const { getLightHouseIssue } = require('./issue');
+
+const createPullRequestComment = async ({ octokit, context, body }) => {
   const commentId = `lighthouse-report-tracker-${context.payload.pull_request.number}`;
   const comments = await octokit.rest.issues.listComments({
     owner: context.repo.owner,
@@ -25,13 +27,15 @@ const createPullRequestComment = async (octokit, context, commentBody) => {
   //   repo: context.repo.repo,
   //   issue_number: context.payload.pull_request.number,
   //   comment_id: commentId,
-  //   body: commentBody,
+  //   body: body,
   // });
+  console.log('THIS IS REPO: ', context.repo);
+  console.log('THIS IS REPO.REPO: ', context.repo.repo);
   return octokit.rest.issues.createComment({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.payload.pull_request.number,
-    body: commentBody,
+    body,
   });
 };
 
@@ -43,11 +47,9 @@ const formatMetricValueDifference = (curr, prev) => {
   }`;
 };
 
-const createReportComparisonTable = (
-  context,
-  currentReports,
-  previousReports
-) => {
+const createReportComparisonTable = async ({ context, currentReports }) => {
+  const previousReports = (await getLightHouseIssue()) ?? [];
+
   let commentBody = `### Lighthouse Report\n\n`;
 
   currentReports.forEach(currReport => {
@@ -56,7 +58,7 @@ const createReportComparisonTable = (
     );
 
     const tableHeading = `#### ${currReport.url} \n`;
-    const rowHeader = `| Metric | Previous Score${
+    const rowHeader = `| Metric | Previous Score ${
       prevReport && `(#${prevReport.pr})`
     } | Current Score(#${
       context.payload.pull_request.number
