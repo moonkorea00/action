@@ -1,5 +1,6 @@
 const github = require('@actions/github');
 const core = require('@actions/core');
+const fs = require('fs');
 
 const {
   createPullRequestComment,
