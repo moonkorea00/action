@@ -19,4 +19,4 @@ jobs:
         uses: ./
         with:
           secret: ${{secrets.GITHUB_TOKEN}}
-          outputDir: ./lhci-reports
+          outputDir: ./lhci_reports
