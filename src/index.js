@@ -13,7 +13,7 @@ async function main() {
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
     const outputDir = core.getInput('outputDir');
-    const reports = fs.readFileSync(`${outputDir}/manifest.json`);
+    const reports = JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`));
     const context = github.context;
 
     if (
@@ -25,9 +25,9 @@ async function main() {
       const commentBody = await createReportComparisonTable({
         octokit,
         context,
-        currentReports: JSON.parse(reports),
+        currentReports: reports,
       });
-
+      console.log('COMMENT BODY : ', commentBody);
       core.info('✅ Creating Lighthouse comparison table in pull request..');
 
       await createPullRequestComment({ octokit, context, body: commentBody });
@@ -40,7 +40,7 @@ async function main() {
       await mutateLighthouseIssue({
         octokit,
         context,
-        body: reports,
+        body: JSON.stringify(reports),
       });
     }
   } catch (err) {

@@ -6,7 +6,7 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
     repo: context.repo.repo,
     issue_number: context.payload.pull_request.number,
   });
-
+  console.log('creating PR : ', body);
   const lighthouseReportTrackerComment = comments.data.find(
     comment => comment.user.login === 'github-actions[bot]'
   );
@@ -26,6 +26,7 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
     issue_number: context.payload.pull_request.number,
     body,
   });
+  console.log('DONE')
 };
 
 const formatMetricValueDifference = (curr, prev) => {
