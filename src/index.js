@@ -26,7 +26,7 @@ async function main() {
         repo: context.repo.repo,
         issue_number: context.payload.pull_request.number,
       });
-      console.log('THIS IS COMMENTS :',comments)
+      console.log('THIS IS USER', comments.data[0].user.login);
       // const commentBody = await createReportComparisonTable({
       //   octokit,
       //   context,
