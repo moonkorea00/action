@@ -6,14 +6,14 @@ const {
   createPullRequestComment,
   createReportComparisonTable,
 } = require('./comment');
-const { getLightHouseIssue, mutateLighthouseIssue } = require('./issue');
+const { mutateLighthouseIssue } = require('./issue');
 
 async function main() {
   try {
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
-    // const outputDir = core.getInput('outputDir');
-    // const reports = fs.readFileSync(`${outputDir}/manifest.json`);
+    const outputDir = core.getInput('outputDir');
+    const reports = fs.readFileSync(`${outputDir}/manifest.json`);
     const context = github.context;
 
     if (
@@ -21,11 +21,14 @@ async function main() {
       ['opened', 'reopened', 'synchronize'].includes(context.payload.action)
     ) {
       core.info('✅ Start running lighthouse report tracker v1.0.0..');
-      const issue = await getLightHouseIssue(octokit, context);
-      console.log('THIS IS ISSUE : ', issue);
-      console.log('THIS IS REPO: ', context.repo);
-      console.log('THIS IS REPO.REPO: ', context.repo.repo);
+      const comments = await octokit.rest.issues.listComments({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        issue_number: context.payload.pull_request.number,
+      });
+      console.log('THIS IS COMMENTS :',comments)
       // const commentBody = await createReportComparisonTable({
+      //   octokit,
       //   context,
       //   currentReports: JSON.parse(reports),
       // });

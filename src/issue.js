@@ -9,7 +9,7 @@ const getLightHouseIssue = async (octokit, context) => {
 };
 
 const mutateLighthouseIssue = async ({ octokit, context, body }) => {
-  const lighthouseIssue = getLightHouseIssue(octokit, context);
+  const lighthouseIssue = await getLightHouseIssue(octokit, context);
 
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({

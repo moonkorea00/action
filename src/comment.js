@@ -7,7 +7,6 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
     repo: context.repo.repo,
     issue_number: context.payload.pull_request.number,
   });
-  console.log('THIS IS COMMENTS : ', comments);
 
   // const comment = comments.data.find(
   //   c =>
@@ -47,8 +46,15 @@ const formatMetricValueDifference = (curr, prev) => {
   }`;
 };
 
-const createReportComparisonTable = async ({ context, currentReports }) => {
-  const previousReports = (await getLightHouseIssue()) ?? [];
+const createReportComparisonTable = async ({
+  octokit,
+  context,
+  currentReports,
+}) => {
+  const lighthouseIssue = await getLightHouseIssue(octokit, context);
+  const previousReports = lighthouseIssue
+    ? JSON.parse(lighthouseIssue.body)
+    : [];
 
   let commentBody = `### Lighthouse Report\n\n`;
 
@@ -59,7 +65,7 @@ const createReportComparisonTable = async ({ context, currentReports }) => {
 
     const tableHeading = `#### ${currReport.url} \n`;
     const rowHeader = `| Metric | Previous Score ${
-      prevReport && `(#${prevReport.pr})`
+      prevReport ? `(#${prevReport.pr})` : ''
     } | Current Score(#${
       context.payload.pull_request.number
     }) | Difference |\n`;
