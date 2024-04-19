@@ -10,20 +10,24 @@ const getLightHouseIssue = async (octokit, context) => {
 
 const mutateLighthouseIssue = async ({ octokit, context, body }) => {
   const lighthouseIssue = await getLightHouseIssue(octokit, context);
-
+  const issueBody = body.map(issue => ({
+    ...issue,
+    pr: context.payload.pull_request.number,
+  }));
+  console.log('ISSUE BODY WITH PR NUBMER', issueBody);
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
       repo: context.repo.repo,
       issue_number: lighthouseIssue.number,
-      body,
+      body: issueBody,
     });
   }
   await octokit.rest.issues.create({
     owner: context.repo.owner,
     repo: context.repo.repo,
     title: issueTitle,
-    body,
+    body: issueBody,
     labels: ['lighthouse'],
   });
 };
