@@ -26,7 +26,7 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
     issue_number: context.payload.pull_request.number,
     body,
   });
-  console.log('DONE')
+  console.log('DONE');
 };
 
 const formatMetricValueDifference = (curr, prev) => {
@@ -44,7 +44,7 @@ const createReportComparisonTable = async ({
 }) => {
   const lighthouseIssue = await getLightHouseIssue(octokit, context);
   const previousReports = lighthouseIssue
-    ? JSON.parse(lighthouseIssue.body)
+    ? JSON.parse(JSON.stringify(lighthouseIssue.body))
     : [];
 
   let commentBody = `### Lighthouse Report\n\n`;
