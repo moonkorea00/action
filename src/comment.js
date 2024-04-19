@@ -76,7 +76,7 @@ const createReportComparisonTable = (
     commentBody += baseTable + '\n\n';
   });
 
-  return baseTable;
+  return commentBody;
 };
 
 module.exports = { createPullRequestComment, createReportComparisonTable };
