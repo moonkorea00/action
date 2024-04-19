@@ -13,7 +13,7 @@ async function main() {
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
     const outputDir = core.getInput('outputDir');
-    // const reports = fs.readFileSync(`${outputDir}/manifest.json`);
+    const reports = fs.readFileSync(`${outputDir}/manifest.json`);
     const context = github.context;
 
     if (
@@ -21,20 +21,14 @@ async function main() {
       ['opened', 'reopened', 'synchronize'].includes(context.payload.action)
     ) {
       core.info('✅ Start running lighthouse report tracker v1.0.0..');
-      const comments = await octokit.rest.issues.listComments({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        issue_number: context.payload.pull_request.number,
-      });
-      // console.log('THIS IS USER', comments.data[0].user.login);
-      console.log('THIS IS USER', comments.data.find(c => c.body.startsWith('### Lighthouse Report')));
-      // const commentBody = await createReportComparisonTable({
-      //   octokit,
-      //   context,
-      //   currentReports: JSON.parse(reports),
-      // });
 
-      // await createPullRequestComment({ octokit, context, body: commentBody });
+      const commentBody = await createReportComparisonTable({
+        octokit,
+        context,
+        currentReports: JSON.parse(reports),
+      });
+
+      await createPullRequestComment({ octokit, context, body: commentBody });
     } else if (
       context.eventName === 'pull_request_target' &&
       context.payload.pull_request.merged

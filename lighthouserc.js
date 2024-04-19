@@ -2,9 +2,7 @@ module.exports = {
   ci: {
     collect: {
       url: ['https://moonkorea.dev'],
-      // startServerCommand: 'npm start',
       numberOfRuns: 1,
-      // staticDistDir: "./build",
     },
     assert: {
       assertions: {

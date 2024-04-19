@@ -1,36 +1,26 @@
 const { getLightHouseIssue } = require('./issue');
 
 const createPullRequestComment = async ({ octokit, context, body }) => {
-  const commentId = `lighthouse-report-tracker-${context.payload.pull_request.number}`;
   const comments = await octokit.rest.issues.listComments({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.payload.pull_request.number,
   });
 
-  // const comment = comments.data.find(
-  //   c =>
-  //     c.user.login === 'your-bot-username' &&
-  //     c.body.startsWith('Specific identifier or content')
-  // );
-  // const commentId = comment.id;
+  const lighthouseReportTrackerComment = comments.data.find(
+    comment => comment.user.login === 'github-actions[bot]'
+  );
 
-  // const mutateComment = comments.find(
-  //   comment => comment.comment_id === commentId
-  // )
-  //   ? octokit.rest.issues.updateComment
-  //   : octokit.rest.issues.createComment;
-
-  // return mutateComment({
-  //   owner: context.repo.owner,
-  //   repo: context.repo.repo,
-  //   issue_number: context.payload.pull_request.number,
-  //   comment_id: commentId,
-  //   body: body,
-  // });
-  console.log('THIS IS REPO: ', context.repo);
-  console.log('THIS IS REPO.REPO: ', context.repo.repo);
-  return octokit.rest.issues.createComment({
+  if (lighthouseReportTrackerComment) {
+    return await octokit.rest.issues.updateComment({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      issue_number: context.payload.pull_request.number,
+      comment_id: lighthouseReportTrackerComment.id,
+      body,
+    });
+  }
+  await octokit.rest.issues.createComment({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.payload.pull_request.number,
