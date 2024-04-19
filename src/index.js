@@ -13,7 +13,7 @@ async function main() {
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
     const outputDir = core.getInput('outputDir');
-    const reports = fs.readFileSync(`${outputDir}/manifest.json`);
+    // const reports = fs.readFileSync(`${outputDir}/manifest.json`);
     const context = github.context;
 
     if (
