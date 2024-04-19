@@ -20,7 +20,7 @@ async function main() {
       context.eventName === 'pull_request' &&
       ['opened', 'reopened', 'synchronize'].includes(context.payload.action)
     ) {
-      core.info('✅ Start running lighthouse report tracker v1.0.0..');
+      core.info('✅ Running lighthouse report tracker..');
 
       const commentBody = await createReportComparisonTable({
         octokit,
@@ -28,11 +28,15 @@ async function main() {
         currentReports: JSON.parse(reports),
       });
 
+      core.info('✅ Creating Lighthouse comparison table in pull request..');
+
       await createPullRequestComment({ octokit, context, body: commentBody });
-    } else if (
+    }
+    if (
       context.eventName === 'pull_request_target' &&
       context.payload.pull_request.merged
     ) {
+      core.info('✅ Updating Lighthouse report log..');
       await mutateLighthouseIssue({
         octokit,
         context,
@@ -42,7 +46,7 @@ async function main() {
   } catch (err) {
     core.setFailed(`❌ Failed running action with error : ${err}`);
   } finally {
-    core.info('✅ End running lighthouse report tracker v1.0.0..');
+    core.info('End running lighthouse report tracker v1.0.0..');
   }
 }
 
