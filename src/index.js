@@ -11,17 +11,17 @@ async function main() {
     const context = github.context;
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
+    const outputDir = core.getInput('outputDir');
+    const reports = JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`));
 
     if (
       context.eventName === 'pull_request' &&
       ['opened', 'reopened', 'synchronize'].includes(context.payload.action)
     ) {
       core.info('Start running lighthouse report tracker v1.0.0..');
-      // const outputDir = core.getInput('outputDir')
-      // const summary = JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`));
 
       // const previousReports = issues.find(issue => issue.id === `lighthouse-report-log`) // update using github api
-      const currentReports = JSON.parse(
+      const curr = JSON.parse(
         JSON.stringify([
           {
             url: 'http://localhost:3000/',
@@ -50,7 +50,7 @@ async function main() {
 
       const commentBody = createReportComparisonTable(
         context,
-        currentReports,
+        reports,
         (previousReports = [])
       );
       await createPullRequestComment(octokit, context, commentBody);

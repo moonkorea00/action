@@ -7,7 +7,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.13.x
+          lhci autorun
       - name: Run Local Action
         uses: ./
         with:
           secret: ${{secrets.GITHUB_TOKEN}}
+          outputDir: ./lhci-reports
