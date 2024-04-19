@@ -27,7 +27,7 @@ async function main() {
         context,
         currentReports: reports,
       });
-
+      console.log('COMMENT BODY : ', commentBody);
       core.info('✅ Creating Lighthouse comparison table in pull request..');
 
       await createPullRequestComment({ octokit, context, body: commentBody });
