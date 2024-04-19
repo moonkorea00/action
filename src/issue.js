@@ -15,6 +15,7 @@ const mutateLighthouseIssue = async ({ octokit, context, body }) => {
     pr: context.payload.pull_request.number,
   }));
   console.log('ISSUE BODY WITH PR NUBMER', issueBody);
+  console.log('ISSUE FROM GITHUB', lighthouseIssue)
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
