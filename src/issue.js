@@ -13,14 +13,15 @@ const mutateLighthouseIssue = async ({ octokit, context, body }) => {
 
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({
-      owner: context.owner,
+      owner: context.repo.owner,
       repo: context.repo.repo,
       issue_number: lighthouseIssue.number,
       body,
     });
   }
   await octokit.rest.issues.create({
-    ...repo,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
     title: issueTitle,
     body,
     labels: ['lighthouse'],
