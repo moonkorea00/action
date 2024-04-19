@@ -1,13 +1,12 @@
 name: 'action test for marketplace'
 description: 'lighthouse action'
-# inputs:
-  # who-to-greet:  
-    # description: 'Who to greet'
-    # required: true
-    # default: 'World'
+inputs:
+  secret:
+    description: 'defatults to secrets.GITHUB_TOKEN'
+    required: true
 # outputs:
-  # time:
-  #   description: 'The time we greeted you'
+# time:
+#   description: 'The time we greeted you'
 runs:
   using: 'node20'
   main: 'src/index.js'
