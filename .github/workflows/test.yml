@@ -17,6 +17,6 @@ jobs:
       #     lhci autorun
       - name: Run Local Action
         uses: ./
-        # with:
-        #   secret: ${{secrets.GITHUB_TOKEN}}
-        #   outputDir: ./lhci_reports
+        with:
+          secret: ${{secrets.GITHUB_TOKEN}}
+          outputDir: ./lhci_reports

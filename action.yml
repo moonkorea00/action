@@ -1,12 +1,12 @@
 name: 'action test for marketplace'
 description: 'lighthouse action'
-# inputs:
-#   secret:
-#     description: 'defatults to secrets.GITHUB_TOKEN'
-#     required: true
-#   outputDir:
-#     description: 'directory where your lighthouse reports are uploaded'
-#     required: true
+inputs:
+  secret:
+    description: 'defatults to secrets.GITHUB_TOKEN'
+    required: true
+  outputDir:
+    description: 'directory where your lighthouse reports are uploaded'
+    required: true
 # outputs:
 # time:
 #   description: 'The time we greeted you'
