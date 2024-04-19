@@ -33,7 +33,7 @@ async function main() {
       context.eventName === 'pull_request_target' &&
       context.payload.pull_request.merged
     ) {
-      mutateLighthouseIssue({
+      await mutateLighthouseIssue({
         octokit,
         context,
         body: reports,
