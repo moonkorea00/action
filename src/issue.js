@@ -18,7 +18,7 @@ const mutateLighthouseIssue = async ({ octokit, context, body }) => {
   );
   console.log('ISSUE BODY WITH PR NUBMER', issueBody);
   console.log('ISSUE FROM GITHUB', lighthouseIssue);
-
+// change if statement condition
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
