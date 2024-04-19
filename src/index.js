@@ -6,7 +6,7 @@ const {
   createPullRequestComment,
   createReportComparisonTable,
 } = require('./comment');
-const {getLightHouseIssue, mutateLighthouseIssue } = require('./issue');
+const { getLightHouseIssue, mutateLighthouseIssue } = require('./issue');
 
 async function main() {
   try {
@@ -21,10 +21,10 @@ async function main() {
       ['opened', 'reopened', 'synchronize'].includes(context.payload.action)
     ) {
       core.info('✅ Start running lighthouse report tracker v1.0.0..');
-const issue = await getLightHouseIssue();
-console.log('THIS IS ISSUE : ',issue)
-console.log('THIS IS REPO: ', context.repo);
-  console.log('THIS IS REPO.REPO: ', context.repo.repo);
+      const issue = await getLightHouseIssue(octokit, context);
+      console.log('THIS IS ISSUE : ', issue);
+      console.log('THIS IS REPO: ', context.repo);
+      console.log('THIS IS REPO.REPO: ', context.repo.repo);
       // const commentBody = await createReportComparisonTable({
       //   context,
       //   currentReports: JSON.parse(reports),
