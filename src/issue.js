@@ -2,7 +2,7 @@ const issueTitle = 'Lighthouse Report Log';
 
 const getLightHouseIssue = async (octokit, context) => {
   const issues = await octokit.rest.issues.listForRepo({
-    owner: context.owner,
+    owner: context.repo.owner,
     repo: context.repo.repo,
   });
   return issues.data?.find(issue => issue.title === issueTitle);
