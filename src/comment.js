@@ -79,4 +79,4 @@ const createReportComparisonTable = (
   return baseTable;
 };
 
-module.export = { createPullRequestComment, createReportComparisonTable };
+module.exports = { createPullRequestComment, createReportComparisonTable };
