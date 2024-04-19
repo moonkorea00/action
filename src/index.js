@@ -10,7 +10,7 @@ async function main() {
   try {
     const context = github.context;
     const token = core.getInput('token');
-    const octokit = github.getOctokit(token);
+    const octokit = github.getOctokit({ auth: token });
 
     if (
       context.eventName === 'pull_request' &&
