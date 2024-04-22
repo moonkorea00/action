@@ -43,7 +43,7 @@ const createReportComparisonTable = async ({
   context,
   currentReports,
 }) => {
-  const previousReports = await getLightHouseIssue(octokit, context);
+  const { body: previousReports } = await getLightHouseIssue(octokit, context);
 
   let commentBody = `### Lighthouse Report\n\n`;
 

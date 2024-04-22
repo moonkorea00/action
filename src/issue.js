@@ -6,25 +6,26 @@ const getLightHouseIssue = async (octokit, context) => {
     repo: context.repo.repo,
     labels: ['lighthouse'],
   });
-  const lightouseTrackerIssue = issues.data?.find(
-    issue => issue.title === issueTitle
-  );
+  const issue = issues.data?.find(issue => issue.title === issueTitle);
 
-  return lightouseTrackerIssue ? JSON.parse(lightouseTrackerIssue.body) : [];
+  return {
+    issue,
+    body: issue ? JSON.parse(issue.body) : [],
+  };
 };
 
 const createIssueBody = () => {};
 
 const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
-  const previousReports = await getLightHouseIssue(octokit, context);
+  const { issue, body } = await getLightHouseIssue(octokit, context);
 
-  const issueBody = JSON.stringify([reports, ...previousReports]);
+  const issueBody = JSON.stringify([reports, ...body]);
 
-  if (previousReports) {
+  if (issue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
       repo: context.repo.repo,
-      issue_number: previousReports.number,
+      issue_number: issue.number,
       body: issueBody,
     });
   }
