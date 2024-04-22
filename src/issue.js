@@ -14,28 +14,39 @@ const getLightHouseIssue = async (octokit, context) => {
   };
 };
 
+const createIssueBody = ({ currentReports, previousReports }) => {
+  const maxLength = 50000;
+  let issueBody = [currentReports, ...previousReports];
+  if (JSON.stringify(previousReports).length > maxLength) {
+    issueBody = [currentReports, ...previousReports.slice(0, -10)];
+  }
+  return JSON.stringify(issueBody);
+};
+
 const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const { issue, body } = await getLightHouseIssue(octokit, context);
-  let issueBody;
-  if (JSON.stringify(body).length > 300) {
-    issueBody = JSON.stringify([reports, ...body.slice(0, -1)]);
-  } else {
-    issueBody = JSON.stringify([reports, ...body]);
+
+  let issueBody = [reports, ...body];
+  const maxLength = 10000;
+
+  if (JSON.stringify(issueBody).length > maxLength) {
+    issueBody = [reports, ...body.slice(0, -1)];
   }
+  const serializedIssueBody = JSON.stringify(issueBody);
 
   if (issue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
       repo: context.repo.repo,
       issue_number: issue.number,
-      body: issueBody,
+      body: serializedIssueBody,
     });
   }
   await octokit.rest.issues.create({
     owner: context.repo.owner,
     repo: context.repo.repo,
     title: issueTitle,
-    body: issueBody,
+    body: serializedIssueBody,
     labels: ['lighthouse'],
   });
 };
