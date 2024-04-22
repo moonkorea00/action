@@ -9,11 +9,32 @@ const {
 const { mutateLighthouseIssue } = require('./issue');
 
 async function main() {
+  const formatTrackerReports = reports => {
+    const trackerReports = reports.map(report => ({
+      url: report.url,
+      summary: {
+        performance: report.summary.performance,
+        accessibility: report.summary.accessibility,
+        'best-practices': report.summary['best-practices'],
+        seo: report.summary.seo,
+        pwa: report.summary.pwa,
+      },
+    }));
+    const newReport = {
+      pr: context.payload.pull_request.number,
+      createdAt: new Date().toISOString,
+      reports: trackerReports,
+    };
+    return newReport;
+  };
   try {
+    // if(!core.getInput('secret'))core.setFailed('missing token')
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
     const outputDir = core.getInput('outputDir');
-    const reports = JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`));
+    const reports = formatTrackerReports(
+      JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`))
+    );
     const context = github.context;
 
     if (
@@ -27,7 +48,7 @@ async function main() {
         context,
         currentReports: reports,
       });
-      console.log('COMMENT BODY : ', commentBody);
+
       core.info('✅ Creating Lighthouse comparison table in pull request..');
 
       await createPullRequestComment({ octokit, context, body: commentBody });
@@ -37,11 +58,11 @@ async function main() {
       context.payload.pull_request.merged
     ) {
       core.info('✅ Updating Lighthouse report log..');
+
       await mutateLighthouseIssue({
         octokit,
         context,
-        body: reports,
-        // body: JSON.stringify(reports),
+        reports,
       });
     }
   } catch (err) {

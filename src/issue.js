@@ -4,21 +4,20 @@ const getLightHouseIssue = async (octokit, context) => {
   const issues = await octokit.rest.issues.listForRepo({
     owner: context.repo.owner,
     repo: context.repo.repo,
+    labels: ['lighthouse'],
   });
   return issues.data?.find(issue => issue.title === issueTitle);
 };
 
-const mutateLighthouseIssue = async ({ octokit, context, body }) => {
+const createIssueBody = () => {};
+
+const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const lighthouseIssue = await getLightHouseIssue(octokit, context);
-  const issueBody = JSON.stringify(
-    body.map(issue => ({
-      ...issue,
-      pr: context.payload.pull_request.number,
-    }))
-  );
-  console.log('ISSUE BODY WITH PR NUBMER', issueBody);
-  console.log('ISSUE FROM GITHUB', lighthouseIssue);
-// change if statement condition
+  const prevReports = lighthouseIssue ? lighthouseIssue.body : [];
+
+  // check for max length
+  const issueBody = [reports, ...prevReports];
+
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
@@ -37,3 +36,32 @@ const mutateLighthouseIssue = async ({ octokit, context, body }) => {
 };
 
 module.exports = { getLightHouseIssue, mutateLighthouseIssue };
+
+// [
+//   {
+//     pr: 13,
+//     createdAt: '2024-04-22T03:07:37.945Z',
+//     reports: [
+//       {
+//         url: 'https://localhost:3000/post/post',
+//         summary: {
+//           performance: 0.99,
+//           accessibility: 0.99,
+//           bestpractice: 0.99,
+//           seo: 0.99,
+//           pwa: 0.99,
+//         },
+//       },
+//       {
+//         url: 'https://localhost:3000/post/post',
+//         summary: {
+//           performance: 0.99,
+//           accessibility: 0.99,
+//           bestpractice: 0.99,
+//           seo: 0.99,
+//           pwa: 0.99,
+//         },
+//       },
+//     ],
+//   },
+// ];

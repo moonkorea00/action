@@ -49,14 +49,15 @@ const createReportComparisonTable = async ({
 
   let commentBody = `### Lighthouse Report\n\n`;
 
-  currentReports.forEach(currReport => {
-    const prevReport = previousReports?.find(
+  currentReports.reports.forEach(currReport => {
+    // optional chaining?
+    const prevReport = previousReports[0]?.reports.find(
       prevReport => prevReport.url === currReport.url
     );
 
     const tableHeading = `#### ${currReport.url} \n`;
     const rowHeader = `| Metric | Previous Score ${
-      prevReport ? `(#${prevReport.pr})` : ''
+      prevReport ? `(#${previousReports[0].pr})` : ''
     } | Current Score(#${
       context.payload.pull_request.number
     }) | Difference |\n`;
