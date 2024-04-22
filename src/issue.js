@@ -15,11 +15,11 @@ const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const lighthouseIssue = await getLightHouseIssue(octokit, context);
   const prevReports = lighthouseIssue ? lighthouseIssue.body : [];
   console.log('THIS IS BODY : ', prevReports);
-  console.log('THIS IS REPORT',reports)
+  console.log('THIS IS REPORT', reports);
   // check for max length
   const issueBody = JSON.stringify([reports, ...prevReports]);
   console.log('THIS IS ISSUE BODY : ', issueBody);
-
+  
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,

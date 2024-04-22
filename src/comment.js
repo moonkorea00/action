@@ -32,8 +32,9 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
 const formatMetricValueDifference = (curr, prev) => {
   if (prev === '➖') return '➖';
   const diff = prev - curr;
+  const absoluteDiff = Math.abs(diff).toFixed(2);
   return `${
-    diff === 0 ? '➖' : diff > 0 ? '🔻' + -diff : '🔺' + Math.abs(diff)
+    diff === 0 ? '➖' : diff > 0 ? `🔻${absoluteDiff}` : `🔺${absoluteDiff}`
   }`;
 };
 
