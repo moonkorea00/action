@@ -17,7 +17,7 @@ const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   console.log('THIS IS BODY : ', prevReports);
   console.log('THIS IS REPORT',reports)
   // check for max length
-  const issueBody = [reports, ...prevReports];
+  const issueBody = JSON.stringify([reports, ...prevReports]);
   console.log('THIS IS ISSUE BODY : ', issueBody);
 
   if (lighthouseIssue) {
