@@ -18,7 +18,7 @@ const createIssueBody = () => {};
 const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const previousReports = await getLightHouseIssue(octokit, context);
 
-  const issueBody = JSON.stringify([reports, ...prevReports]);
+  const issueBody = JSON.stringify([reports, ...previousReports]);
 
   if (previousReports) {
     return await octokit.rest.issues.update({
