@@ -58,7 +58,7 @@ async function main() {
       await mutateLighthouseIssue({
         octokit,
         context,
-        body: reports,
+        reports,
       });
     }
   } catch (err) {
