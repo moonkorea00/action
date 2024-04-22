@@ -9,33 +9,33 @@ const {
 const { mutateLighthouseIssue } = require('./issue');
 
 async function main() {
-  const formatTrackerReports = reports => {
-    const trackerReports = reports.map(report => ({
-      url: report.url,
-      summary: {
-        performance: report.summary.performance,
-        accessibility: report.summary.accessibility,
-        'best-practices': report.summary['best-practices'],
-        seo: report.summary.seo,
-        pwa: report.summary.pwa,
-      },
-    }));
-    const newReport = {
-      pr: context.payload.pull_request.number,
-      createdAt: new Date().toISOString,
-      reports: trackerReports,
-    };
-    return newReport;
-  };
   try {
     // if(!core.getInput('secret'))core.setFailed('missing token')
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
     const outputDir = core.getInput('outputDir');
+    const context = github.context;
+    const formatTrackerReports = reports => {
+      const trackerReports = reports.map(report => ({
+        url: report.url,
+        summary: {
+          performance: report.summary.performance,
+          accessibility: report.summary.accessibility,
+          'best-practices': report.summary['best-practices'],
+          seo: report.summary.seo,
+          pwa: report.summary.pwa,
+        },
+      }));
+      const newReport = {
+        pr: context.payload.pull_request.number,
+        createdAt: new Date().toISOString,
+        reports: trackerReports,
+      };
+      return newReport;
+    };
     const reports = formatTrackerReports(
       JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`))
     );
-    const context = github.context;
 
     if (
       context.eventName === 'pull_request' &&
@@ -52,17 +52,13 @@ async function main() {
       core.info('✅ Creating Lighthouse comparison table in pull request..');
 
       await createPullRequestComment({ octokit, context, body: commentBody });
-    }
-    if (
-      context.eventName === 'pull_request_target' &&
-      context.payload.pull_request.merged
-    ) {
+
       core.info('✅ Updating Lighthouse report log..');
 
       await mutateLighthouseIssue({
         octokit,
         context,
-        reports,
+        body: reports,
       });
     }
   } catch (err) {
