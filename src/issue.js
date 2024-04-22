@@ -14,9 +14,10 @@ const createIssueBody = () => {};
 const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const lighthouseIssue = await getLightHouseIssue(octokit, context);
   const prevReports = lighthouseIssue ? lighthouseIssue.body : [];
-
+  console.log('THIS IS BODY : ', prevReports);
   // check for max length
-  const issueBody = [reports, ...prevReports];
+  const issueBody = [...reports, ...prevReports];
+  console.log('THIS IS ISSUE BODY : ', issueBody);
 
   if (lighthouseIssue) {
     return await octokit.rest.issues.update({
