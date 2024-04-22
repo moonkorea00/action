@@ -14,8 +14,6 @@ const getLightHouseIssue = async (octokit, context) => {
   };
 };
 
-const createIssueBody = () => {};
-
 const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const { issue, body } = await getLightHouseIssue(octokit, context);
 
@@ -39,32 +37,3 @@ const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
 };
 
 module.exports = { getLightHouseIssue, mutateLighthouseIssue };
-
-// [
-//   {
-//     pr: 13,
-//     createdAt: '2024-04-22T03:07:37.945Z',
-//     reports: [
-//       {
-//         url: 'https://localhost:3000/post/post',
-//         summary: {
-//           performance: 0.99,
-//           accessibility: 0.99,
-//           bestpractice: 0.99,
-//           seo: 0.99,
-//           pwa: 0.99,
-//         },
-//       },
-//       {
-//         url: 'https://localhost:3000/post/post',
-//         summary: {
-//           performance: 0.99,
-//           accessibility: 0.99,
-//           bestpractice: 0.99,
-//           seo: 0.99,
-//           pwa: 0.99,
-//         },
-//       },
-//     ],
-//   },
-// ];

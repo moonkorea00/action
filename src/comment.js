@@ -1,4 +1,5 @@
 const { getLightHouseIssue } = require('./issue');
+const { formatMetricValueDifference } = require('./utils');
 
 const createPullRequestComment = async ({ octokit, context, body }) => {
   const comments = await octokit.rest.issues.listComments({
@@ -25,17 +26,6 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
     issue_number: context.payload.pull_request.number,
     body,
   });
-};
-
-const formatMetricValueDifference = (curr, prev) => {
-  if (prev === '➖') return '➖';
-
-  const diff = prev - curr;
-  const absoluteDiff = Math.round(Math.abs(diff));
-
-  return `${
-    diff === 0 ? '➖' : diff > 0 ? `🔻${absoluteDiff}` : `🔺${absoluteDiff}`
-  }`;
 };
 
 const createReportComparisonTable = async ({

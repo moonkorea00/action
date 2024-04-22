@@ -7,33 +7,16 @@ const {
   createReportComparisonTable,
 } = require('./comment');
 const { mutateLighthouseIssue } = require('./issue');
+const { formatTrackerReports } = require('./utils');
 
 async function main() {
   try {
-    // if(!core.getInput('secret'))core.setFailed('missing token')
     const token = core.getInput('secret');
     const octokit = github.getOctokit(token);
     const outputDir = core.getInput('outputDir');
     const context = github.context;
-    const formatTrackerReports = reports => {
-      const trackerReports = reports.map(report => ({
-        url: report.url,
-        summary: {
-          performance: report.summary.performance,
-          accessibility: report.summary.accessibility,
-          'best-practices': report.summary['best-practices'],
-          seo: report.summary.seo,
-          pwa: report.summary.pwa,
-        },
-      }));
-
-      return {
-        pr: context.payload.pull_request.number,
-        createdAt: new Date().toISOString,
-        reports: trackerReports,
-      };
-    };
     const reports = formatTrackerReports(
+      context,
       JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`))
     );
 
