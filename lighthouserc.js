@@ -1,7 +1,11 @@
 module.exports = {
   ci: {
     collect: {
-      url: ['https://moonkorea.dev'],
+      url: [
+        'https://moonkorea.dev',
+        'https://google.com',
+        'https://www.moonkorea.dev/React-%EB%A0%8C%EB%8D%94%EB%A7%81-%EB%B0%8F-%EC%B5%9C%EC%A0%81%ED%99%94-(2)-React-memo',
+      ],
       numberOfRuns: 1,
     },
     assert: {
