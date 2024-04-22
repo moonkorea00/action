@@ -16,8 +16,12 @@ const getLightHouseIssue = async (octokit, context) => {
 
 const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const { issue, body } = await getLightHouseIssue(octokit, context);
-
-  const issueBody = JSON.stringify([reports, ...body]);
+  let issueBody;
+  if (JSON.stringify(body).length > 300) {
+    issueBody = JSON.stringify([reports, ...body.slice(0, -1)]);
+  } else {
+    issueBody = JSON.stringify([reports, ...body]);
+  }
 
   if (issue) {
     return await octokit.rest.issues.update({

@@ -12,7 +12,7 @@ const formatTrackerReports = (context, reports) => {
 
   return {
     pr: context.payload.pull_request.number,
-    createdAt: new Date().toISOString(),
+    auditedAt: new Date().toISOString(),
     reports: trackerReports,
   };
 };
