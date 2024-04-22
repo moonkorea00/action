@@ -26,12 +26,12 @@ async function main() {
           pwa: report.summary.pwa,
         },
       }));
-      const newReport = {
+
+      return {
         pr: context.payload.pull_request.number,
         createdAt: new Date().toISOString,
         reports: trackerReports,
       };
-      return newReport;
     };
     const reports = formatTrackerReports(
       JSON.parse(fs.readFileSync(`${outputDir}/manifest.json`))

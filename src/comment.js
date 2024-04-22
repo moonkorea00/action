@@ -6,7 +6,6 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
     repo: context.repo.repo,
     issue_number: context.payload.pull_request.number,
   });
-  console.log('creating PR : ', body);
   const lighthouseReportTrackerComment = comments.data.find(
     comment => comment.user.login === 'github-actions[bot]'
   );
@@ -26,13 +25,14 @@ const createPullRequestComment = async ({ octokit, context, body }) => {
     issue_number: context.payload.pull_request.number,
     body,
   });
-  console.log('DONE');
 };
 
 const formatMetricValueDifference = (curr, prev) => {
   if (prev === '➖') return '➖';
+
   const diff = prev - curr;
   const absoluteDiff = Math.round(Math.abs(diff));
+
   return `${
     diff === 0 ? '➖' : diff > 0 ? `🔻${absoluteDiff}` : `🔺${absoluteDiff}`
   }`;
@@ -43,10 +43,7 @@ const createReportComparisonTable = async ({
   context,
   currentReports,
 }) => {
-  const lighthouseIssue = await getLightHouseIssue(octokit, context);
-  const previousReports = lighthouseIssue
-    ? JSON.parse(lighthouseIssue.body)
-    : [];
+  const previousReports = await getLightHouseIssue(octokit, context);
 
   let commentBody = `### Lighthouse Report\n\n`;
 

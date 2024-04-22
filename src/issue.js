@@ -6,25 +6,25 @@ const getLightHouseIssue = async (octokit, context) => {
     repo: context.repo.repo,
     labels: ['lighthouse'],
   });
-  return issues.data?.find(issue => issue.title === issueTitle);
+  const lightouseTrackerIssue = issues.data?.find(
+    issue => issue.title === issueTitle
+  );
+
+  return lightouseTrackerIssue ? JSON.parse(lightouseTrackerIssue.body) : [];
 };
 
 const createIssueBody = () => {};
 
 const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
-  const lighthouseIssue = await getLightHouseIssue(octokit, context);
-  const prevReports = lighthouseIssue ? JSON.parse(lighthouseIssue.body) : [];
-  console.log('THIS IS BODY : ', prevReports);
-  console.log('THIS IS REPORT', reports);
-  // check for max length
-  const issueBody = JSON.stringify([reports, ...prevReports]);
-  console.log('THIS IS ISSUE BODYd : ', issueBody);
+  const previousReports = await getLightHouseIssue(octokit, context);
 
-  if (lighthouseIssue) {
+  const issueBody = JSON.stringify([reports, ...prevReports]);
+
+  if (previousReports) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
       repo: context.repo.repo,
-      issue_number: lighthouseIssue.number,
+      issue_number: previousReports.number,
       body: issueBody,
     });
   }
