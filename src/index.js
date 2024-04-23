@@ -32,9 +32,10 @@ async function main() {
         currentReports: reports,
       });
 
+      core.info(commentBody);
       core.info('✅ Creating Lighthouse comparison table in pull request..');
 
-      await createPullRequestComment({ octokit, context, body: commentBody });
+      createPullRequestComment({ octokit, context, body: commentBody });
 
       core.info('✅ Updating Lighthouse report log..');
 
