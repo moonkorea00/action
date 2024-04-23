@@ -4,34 +4,49 @@ const getLightHouseIssue = async (octokit, context) => {
   const issues = await octokit.rest.issues.listForRepo({
     owner: context.repo.owner,
     repo: context.repo.repo,
+    labels: ['lighthouse'],
   });
-  return issues.data?.find(issue => issue.title === issueTitle);
+  const issue = issues.data?.find(issue => issue.title === issueTitle);
+
+  return {
+    issue,
+    body: issue ? JSON.parse(issue.body) : [],
+  };
+};
+// dsd
+const createIssueBody = ({ currentReports, previousReports }) => {
+  const maxLength = 50000;
+  let issueBody = [currentReports, ...previousReports];
+  if (JSON.stringify(previousReports).length > maxLength) {
+    issueBody = [currentReports, ...previousReports.slice(0, -10)];
+  }
+  return JSON.stringify(issueBody);
 };
 
-const mutateLighthouseIssue = async ({ octokit, context, body }) => {
-  const lighthouseIssue = await getLightHouseIssue(octokit, context);
-  const issueBody = JSON.stringify(
-    body.map(issue => ({
-      ...issue,
-      pr: context.payload.pull_request.number,
-    }))
-  );
-  console.log('ISSUE BODY WITH PR NUBMER', issueBody);
-  console.log('ISSUE FROM GITHUB', lighthouseIssue);
+const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
+  const { issue, body } = await getLightHouseIssue(octokit, context);
 
-  if (lighthouseIssue) {
+  let issueBody = [reports, ...body];
+  const maxLength = 3000;
+
+  if (JSON.stringify(issueBody).length > maxLength) {
+    issueBody = [reports, ...body.slice(0, -1)];
+  }
+  const serializedIssueBody = JSON.stringify(issueBody);
+
+  if (issue) {
     return await octokit.rest.issues.update({
       owner: context.repo.owner,
       repo: context.repo.repo,
-      issue_number: lighthouseIssue.number,
-      body: issueBody,
+      issue_number: issue.number,
+      body: serializedIssueBody,
     });
   }
   await octokit.rest.issues.create({
     owner: context.repo.owner,
     repo: context.repo.repo,
     title: issueTitle,
-    body: issueBody,
+    body: serializedIssueBody,
     labels: ['lighthouse'],
   });
 };

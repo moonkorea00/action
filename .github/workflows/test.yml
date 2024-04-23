@@ -1,12 +1,12 @@
-name: CI
+name: Lighthouse Report Tracker
 
 on:
   pull_request:
-  pull_request_target:
-    types: [closed]
+    branches-ignore:
+      - 'dependabot/**'
 
 jobs:
-  test-action:
+  Lighthouse:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -19,8 +19,7 @@ jobs:
         run: |
           npm install -g @lhci/cli@0.13.x
           lhci autorun
-      - name: Run Local Action
+      - name: Run Lighthouse Report Tracker
         uses: ./
         with:
           secret: ${{secrets.GITHUB_TOKEN}}
-          outputDir: ./lhci_reports
