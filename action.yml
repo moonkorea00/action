@@ -5,8 +5,8 @@ inputs:
     description: 'defatults to secrets.GITHUB_TOKEN'
     required: true
   outputDir:
-    description: 'directory where your lighthouse reports are uploaded'
-    required: true
+    description: 'The directory configured in your lighthouserc.js.'
+    default : './lhci'
 # outputs:
 # time:
 #   description: 'The time we greeted you'
