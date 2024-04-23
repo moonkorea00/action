@@ -1,4 +1,4 @@
-name: CI
+name: Lighthouse Report Tracker
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - 'dependabot/**'
 
 jobs:
-  test-action:
+  Lighthouse:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
