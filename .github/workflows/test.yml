@@ -19,7 +19,7 @@ jobs:
         run: |
           npm install -g @lhci/cli@0.13.x
           lhci autorun
-      - name: Run Local Action
+      - name: Run Lighthouse Report Tracker
         uses: ./
         with:
           secret: ${{secrets.GITHUB_TOKEN}}
