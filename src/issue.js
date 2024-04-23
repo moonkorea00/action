@@ -27,7 +27,7 @@ const mutateLighthouseIssue = async ({ octokit, context, reports }) => {
   const { issue, body } = await getLightHouseIssue(octokit, context);
 
   let issueBody = [reports, ...body];
-  const maxLength = 300;
+  const maxLength = 3000;
 
   if (JSON.stringify(issueBody).length > maxLength) {
     issueBody = [reports, ...body.slice(0, -1)];
