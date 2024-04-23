@@ -1,7 +1,7 @@
 module.exports = {
   ci: {
     collect: {
-      url: ['https://moonkorea.dev'],
+      url: ['https://moonkorea.dev', 'https://google.com'],
       numberOfRuns: 1,
     },
     upload: {
